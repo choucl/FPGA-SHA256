@@ -11,18 +11,26 @@
 module input_bram(
     input         clk_ai,
     input         clk_bi,
-    input         rst_ani,  // ~rst_ani is connected port/reg reset
+    input         rst_ani, // ~rst_ani is connected port/reg reset
     input         rst_bi,  // rst_bi is connected port/reg reset
-    input         en_ai,   // read enable
-    input         en_bi,   // write enable
-    input  [7:0]  we_bi,   // byte-wide write enable, connected to WEBWE[7:0]
-    input  [31:0] din_ai,  // LSB of input data
-    input  [31:0] din_bi,  // MSB of input data
+    input         en_ai,   // Read enable
+    input         en_bi,   // Write enable
+    input  [7:0]  we_bi,   // Byte-wide write enable, connected to WEBWE[7:0]
+    input  [63:0] din_i;   // Input data
     input  [11:0] addr_ai, // Read addr
     input  [11:0] addr_bi, // Write addr
-    output [31:0] dout_ao, // LSB of output data
-    output [31:0] dout_bo  // MSB of output data
+    output [63:0] dout_o   // Output data
 );
+
+wire [31:0] din_ai;
+wire [31:0] din_bi;
+assign din_ai = din_i[31:0];    // LSB of output
+assign din_bi = din_i[63:32];   // MSB of input
+
+wire [31:0] dout_ao;
+wire [31:0] dout_bo;
+assign dout_ao = dout_o[31:0];  // LSB of input
+assign dout_bo = dout_o[63:32]; // MSB of input
 
 RAMB36E1 #(
     // Address Collision Mode: "PERFORMANCE" or "DELAYED_WRITE"
