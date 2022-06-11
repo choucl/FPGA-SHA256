@@ -2,7 +2,7 @@
  * Dual port mode: SDP
  * Read port: A(connected to preprocess)
  * Read width: 72
- * Write port: B(connected to PS)
+ * Write port: B(connected to axi bram controller)
  * Write width: 72
  * Write mode: read first
  * Size: 4Kb(2^12)
@@ -11,8 +11,8 @@
 module input_bram(
     input         clk_ai,
     input         clk_bi,
-    input         rst_ai,  // ~rst_ai is connected port/reg reset
-    input         rst_bi,  // ~rst_bi is connected port/reg reset
+    input         rst_ani,  // ~rst_ani is connected port/reg reset
+    input         rst_bi,  // rst_bi is connected port/reg reset
     input         en_ai,   // read enable
     input         en_bi,   // write enable
     input  [7:0]  we_bi,   // byte-wide write enable, connected to WEBWE[7:0]
@@ -235,8 +235,8 @@ RAMB36E1 #(
     .CLKARDCLK(clk_ai), // 1-bit input: A port clock/Read clock
     .ENARDEN(en_ai), // 1-bit input: A port enable/Read enable
     .REGCEAREGCE(), // 1-bit input: A port register enable/Register enable
-    .RSTRAMARSTRAM(~rst_ai), // 1-bit input: A port set/reset
-    .RSTREGARSTREG(~rst_ai), // 1-bit input: A port register set/reset
+    .RSTRAMARSTRAM(~rst_ani), // 1-bit input: A port set/reset
+    .RSTREGARSTREG(~rst_ani), // 1-bit input: A port register set/reset
     .WEA(), // 4-bit input: A port write enable
     // Port A Data: 32-bit (each) input: Port A data
     .DIADI(din_ai), // 32-bit input: A port data/LSB data
@@ -247,8 +247,8 @@ RAMB36E1 #(
     .CLKBWRCLK(clk_bi), // 1-bit input: B port clock/Write clock
     .ENBWREN(en_bi), // 1-bit input: B port enable/Write enable
     .REGCEB(1), // 1-bit input: B port register enable
-    .RSTRAMB(~rst_bi), // 1-bit input: B port set/reset
-    .RSTREGB(~rst_bi), // 1-bit input: B port register set/reset
+    .RSTRAMB(rst_bi), // 1-bit input: B port set/reset
+    .RSTREGB(rst_bi), // 1-bit input: B port register set/reset
     .WEBWE(we_bi), // 8-bit input: B port write enable/Write enable
     // Port B Data: 32-bit (each) input: Port B data
     .DIBDI(din_bi), // 32-bit input: B port data/MSB data
