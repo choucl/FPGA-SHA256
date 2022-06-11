@@ -254,7 +254,7 @@ RAMB36E1 #(
     .ADDRBWRADDR({1'b1, addr_bi, 3'd0}), // 16-bit input: B port address/Write address
     .CLKBWRCLK(clk_bi), // 1-bit input: B port clock/Write clock
     .ENBWREN(en_bi), // 1-bit input: B port enable/Write enable
-    .REGCEB(1), // 1-bit input: B port register enable
+    .REGCEB(), // 1-bit input: B port register enable
     .RSTRAMB(rst_bi), // 1-bit input: B port set/reset
     .RSTREGB(rst_bi), // 1-bit input: B port register set/reset
     .WEBWE(we_bi), // 8-bit input: B port write enable/Write enable
