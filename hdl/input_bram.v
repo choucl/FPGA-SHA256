@@ -243,7 +243,7 @@ RAMB36E1 #(
     .DIPADIP(), // 4-bit input: A port parity/LSB parity
 	// Port B Address/Control Signals: 16-bit (each) input: Port B address and control signals (write port
 	// when RAM_MODE="SDP")
-    .ADDRBWRADDR({1'b1, addr_bi, 5'd0}), // 16-bit input: B port address/Write address
+    .ADDRBWRADDR({1'b1, addr_bi, 3'd0}), // 16-bit input: B port address/Write address
     .CLKBWRCLK(clk_bi), // 1-bit input: B port clock/Write clock
     .ENBWREN(en_bi), // 1-bit input: B port enable/Write enable
     .REGCEB(1), // 1-bit input: B port register enable
