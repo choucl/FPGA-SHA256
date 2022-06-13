@@ -1,3 +1,7 @@
+/* 
+ * Main loop of SHA256 algorithm
+ * It takes 256 cycles to finish 64 iters
+ */
 module main_loop(
     input clk_i,
     input rst_ni,
@@ -70,6 +74,10 @@ reg [31:0] t1, t2;
 wire [31:0] t1_w;
 assign t1_w = s1_ch + hkw;
 // Stage 3
+wire [31:0] new_a, new_e;
+assign new_a = t1 + t2;
+assign new_e = t2 + d3;
+
 wire [31:0] H0_new, H1_new, H2_new, H3_new;
 wire [31:0] H4_new, H5_new, H6_new, H7_new;
 
@@ -223,10 +231,10 @@ always @(posedge clk_i) begin
             h0 <= H7_new;
         end else begin
             // abcdefgh for new main loop iter
-            a0 <= t1 + t2;
-            e0 <= t2 + d3;
+            a0 <= new_a;
+            e0 <= new_e;
             b0 <= a3;
-            c0 <= d3;
+            c0 <= b3;
             d0 <= c3;
             f0 <= e3;
             g0 <= f3;
