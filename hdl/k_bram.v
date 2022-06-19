@@ -13,13 +13,8 @@ module k_bram(
     input         rst_ani, // ~rst_ani is connected port/reg reset
     input         en_ai,
     input  [11:0] addr_ai,
-    output [63:0] dout_o
+    output [31:0] dout_ao
 );
-
-wire [31:0] dout_ao;
-wire [31:0] dout_bo;
-assign dout_ao = dout_o[31:0];  // LSB of input
-assign dout_bo = dout_o[63:32]; // MSB of input
 
 RAMB36E1 #(
     // Address Collision Mode: "PERFORMANCE" or "DELAYED_WRITE"
@@ -219,7 +214,7 @@ RAMB36E1 #(
     .DOADO(dout_ao), // 32-bit output: A port data/LSB data
     .DOPADOP(), // 4-bit output: A port parity/LSB parity
 	// Port B Data: 32-bit (each) output: Port B data
-    .DOBDO(dout_bo), // 32-bit output: B port data/MSB data
+    .DOBDO(), // 32-bit output: B port data/MSB data
     .DOPBDOP(), // 4-bit output: B port parity/MSB parity
     .CASCADEINA(), // 1-bit input: A port cascade
     .CASCADEINB(), // 1-bit input: B port cascade
