@@ -17,7 +17,7 @@ module input_bram(
     input         rst_bi,  // rst_bi is connected port/reg reset
     input         en_ai,
     input         en_bi,
-    input  [3:0]  we_bi,
+    input         we_bi,
     input  [31:0] din_bi;  // Input data
     input  [11:0] addr_ai, // Read addr
     input  [11:0] addr_bi, // Write addr
@@ -249,7 +249,7 @@ RAMB36E1 #(
     .REGCEB(), // 1-bit input: B port register enable
     .RSTRAMB(rst_bi), // 1-bit input: B port set/reset
     .RSTREGB(rst_bi), // 1-bit input: B port register set/reset
-    .WEBWE(we_bi), // 8-bit input: B port write enable/Write enable
+    .WEBWE(we_bi, we_bi, we_bi, we_bi, we_bi, we_bi, we_bi, we_bi), // 8-bit input: B port write enable/Write enable
     // Port B Data: 32-bit (each) input: Port B data
     .DIBDI(din_bi), // 32-bit input: B port data/MSB data
     .DIPBDIP() // 4-bit input: B port parity/MSB parity
