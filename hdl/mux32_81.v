@@ -8,7 +8,7 @@ module mux32_81(
     input [31:0] din5_i,
     input [31:0] din6_i,
     input [31:0] din7_i,
-    output reg  dout_o
+    output reg [31:0] dout_o
 );
 
     always @(*) begin
