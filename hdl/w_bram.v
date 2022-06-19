@@ -1,10 +1,12 @@
 /*
- * Dual port mode: SDP
- * Read port: A(connected to main loop and preprocess)
- * Read width: 72
- * Write port: B(connected to preprocess)
- * Write width: 72
- * Write mode: read first
+ * Dual port mode: TDP
+ * Port A: read by main loop, write by controller
+ * Read width A: 36
+ * Write width A: 36
+ * Port B: write by preprocess
+ * Read width: 0
+ * Write width: 36
+ * Write mode: write first
  * Size: 4Kb(2^12)
  */
 
@@ -12,25 +14,17 @@ module w_bram(
     input         clk_ai,
     input         clk_bi,
     input         rst_ani, // ~rst_ani is connected port/reg reset
-    input         rst_bi,  // rst_bi is connected port/reg reset
-    input         en_ai,   // Read enable
-    input         en_bi,   // Write enable
-    input  [7:0]  we_bi,   // Byte-wide write enable, connected to WEBWE[7:0]
-    input  [63:0] din_i;   // Input data
-    input  [11:0] addr_ai, // Read addr
-    input  [11:0] addr_bi, // Write addr
-    output [63:0] dout_o   // Output data
+    input         rst_bni, // ~rst_bni is connected port/reg reset
+    input         en_ai,
+    input         en_bi,
+    input  [3:0]  we_ai,   // 4-bit byte-wide write enable
+    input  [3:0]  we_bi,   // 4-bit byte-wide write enable
+    input  [31:0] din_ai
+    input  [31:0] din_bi,
+    input  [11:0] addr_ai,
+    input  [11:0] addr_bi,
+    output [31:0] dout_ao // Only port A can be read
 );
-
-wire [31:0] din_ai;
-wire [31:0] din_bi;
-assign din_ai = din_i[31:0];    // LSB of output
-assign din_bi = din_i[63:32];   // MSB of input
-
-wire [31:0] dout_ao;
-wire [31:0] dout_bo;
-assign dout_ao = dout_o[31:0];  // LSB of input
-assign dout_bo = dout_o[63:32]; // MSB of input
 
 RAMB36E1 #(
     // Address Collision Mode: "PERFORMANCE" or "DELAYED_WRITE"
@@ -197,15 +191,15 @@ RAMB36E1 #(
     // Initialization File: RAM initialization file
     .INIT_FILE("NONE"),
     // RAM Mode: "SDP" or "TDP"
-    .RAM_MODE("SDP"),
+    .RAM_MODE("TDP"),
     // RAM_EXTENSION_A, RAM_EXTENSION_B: Selects cascade mode ("UPPER", "LOWER", or "NONE")
     .RAM_EXTENSION_A("NONE"),
     .RAM_EXTENSION_B("NONE"),
     // READ_WIDTH_A/B, WRITE_WIDTH_A/B: Read/write width per port
-    .READ_WIDTH_A(72), // 0-72
+    .READ_WIDTH_A(36), // 0-72
     .READ_WIDTH_B(0), // 0-36
-    .WRITE_WIDTH_A(0), // 0-36
-    .WRITE_WIDTH_B(72), // 0-72
+    .WRITE_WIDTH_A(36), // 0-36
+    .WRITE_WIDTH_B(36), // 0-72
     // RSTREG_PRIORITY_A, RSTREG_PRIORITY_B: Reset or enable priority ("RSTREG" or "REGCE")
     .RSTREG_PRIORITY_A("RSTREG"),
     .RSTREG_PRIORITY_B("RSTREG"),
@@ -215,8 +209,8 @@ RAMB36E1 #(
     // Simulation Device: Must be set to "7SERIES" for simulation behavior
     .SIM_DEVICE("7SERIES"),
     // WriteMode: Value on output upon a write ("WRITE_FIRST", "READ_FIRST", or "NO_CHANGE")
-    .WRITE_MODE_A("READ_FIRST"),
-    .WRITE_MODE_B("READ_FIRST")
+    .WRITE_MODE_A("WRITE_FIRST"),
+    .WRITE_MODE_B("WRITE_FIRST")
     )
     RAMB36E1_inst (
     // Cascade Signals: 1-bit (each) output: BRAM cascade ports (to create 64kx1)
@@ -230,7 +224,7 @@ RAMB36E1 #(
     .DOADO(dout_ao), // 32-bit output: A port data/LSB data
     .DOPADOP(), // 4-bit output: A port parity/LSB parity
 	// Port B Data: 32-bit (each) output: Port B data
-    .DOBDO(dout_bo), // 32-bit output: B port data/MSB data
+    .DOBDO(), // 32-bit output: B port data/MSB data
     .DOPBDOP(), // 4-bit output: B port parity/MSB parity
     .CASCADEINA(), // 1-bit input: A port cascade
     .CASCADEINB(), // 1-bit input: B port cascade
@@ -245,7 +239,7 @@ RAMB36E1 #(
     .REGCEAREGCE(), // 1-bit input: A port register enable/Register enable
     .RSTRAMARSTRAM(~rst_ani), // 1-bit input: A port set/reset
     .RSTREGARSTREG(~rst_ani), // 1-bit input: A port register set/reset
-    .WEA(), // 4-bit input: A port write enable
+    .WEA(we_ai), // 4-bit input: A port write enable
     // Port A Data: 32-bit (each) input: Port A data
     .DIADI(din_ai), // 32-bit input: A port data/LSB data
     .DIPADIP(), // 4-bit input: A port parity/LSB parity
@@ -255,9 +249,9 @@ RAMB36E1 #(
     .CLKBWRCLK(clk_bi), // 1-bit input: B port clock/Write clock
     .ENBWREN(en_bi), // 1-bit input: B port enable/Write enable
     .REGCEB(), // 1-bit input: B port register enable
-    .RSTRAMB(rst_bi), // 1-bit input: B port set/reset
-    .RSTREGB(rst_bi), // 1-bit input: B port register set/reset
-    .WEBWE(we_bi), // 8-bit input: B port write enable/Write enable
+    .RSTRAMB(~rst_bni), // 1-bit input: B port set/reset
+    .RSTREGB(~rst_bni), // 1-bit input: B port register set/reset
+    .WEBWE(4'b0000, we_bi), // 8-bit input: B port write enable/Write enable
     // Port B Data: 32-bit (each) input: Port B data
     .DIBDI(din_bi), // 32-bit input: B port data/MSB data
     .DIPBDIP() // 4-bit input: B port parity/MSB parity

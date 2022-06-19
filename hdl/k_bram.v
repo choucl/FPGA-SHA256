@@ -1,20 +1,19 @@
 /*
- * Dual port mode: SDP
- * Read port: A(connected to main loop)
- * Read width: 72
- * Write port: none(read only)
- * Write width: 0
- * Write mode: read first
+ * Dual port mode: TDP
+ * Port A: read by main loop
+ * Read width A: 36
+ * Write width A: 0
+ * Port B: unused
+ * Write mode: write first
  * Size: 4Kb(2^12)
  */
 
 module k_bram(
     input         clk_ai,
-    input         clk_bi,
     input         rst_ani, // ~rst_ani is connected port/reg reset
-    input         en_ai,   // read enable
-    input  [11:0] addr_ai, // Read addr
-    output [63:0] dout_o   // Output data
+    input         en_ai,
+    input  [11:0] addr_ai,
+    output [63:0] dout_o
 );
 
 wire [31:0] dout_ao;
@@ -187,12 +186,12 @@ RAMB36E1 #(
     // Initialization File: RAM initialization file
     .INIT_FILE("NONE"),
     // RAM Mode: "SDP" or "TDP"
-    .RAM_MODE("SDP"),
+    .RAM_MODE("TDP"),
     // RAM_EXTENSION_A, RAM_EXTENSION_B: Selects cascade mode ("UPPER", "LOWER", or "NONE")
     .RAM_EXTENSION_A("NONE"),
     .RAM_EXTENSION_B("NONE"),
     // READ_WIDTH_A/B, WRITE_WIDTH_A/B: Read/write width per port
-    .READ_WIDTH_A(72), // 0-72
+    .READ_WIDTH_A(36), // 0-72
     .READ_WIDTH_B(0), // 0-36
     .WRITE_WIDTH_A(0), // 0-36
     .WRITE_WIDTH_B(0), // 0-72
@@ -205,8 +204,8 @@ RAMB36E1 #(
     // Simulation Device: Must be set to "7SERIES" for simulation behavior
     .SIM_DEVICE("7SERIES"),
     // WriteMode: Value on output upon a write ("WRITE_FIRST", "READ_FIRST", or "NO_CHANGE")
-    .WRITE_MODE_A("READ_FIRST"),
-    .WRITE_MODE_B("READ_FIRST")
+    .WRITE_MODE_A("WRITE_FIRST"),
+    .WRITE_MODE_B("WRITE_FIRST")
     )
     RAMB36E1_inst (
     // Cascade Signals: 1-bit (each) output: BRAM cascade ports (to create 64kx1)
@@ -242,7 +241,7 @@ RAMB36E1 #(
 	// Port B Address/Control Signals: 16-bit (each) input: Port B address and control signals (write port
 	// when RAM_MODE="SDP")
     .ADDRBWRADDR(), // 16-bit input: B port address/Write address
-    .CLKBWRCLK(clk_bi), // 1-bit input: B port clock/Write clock
+    .CLKBWRCLK(), // 1-bit input: B port clock/Write clock
     .ENBWREN(), // 1-bit input: B port enable/Write enable
     .REGCEB(), // 1-bit input: B port register enable
     .RSTRAMB(), // 1-bit input: B port set/reset
