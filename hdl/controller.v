@@ -74,7 +74,7 @@ module controller(
      
     assign valid_o     = {28'b0, valid};
     assign OB_addr_o   = OB_addr[PHASE2];
-    assign IB_r_addr_o = IB_addr[PHASE1];
+    assign IB_r_addr_o = IB_addr[PHASE0];
     assign OB_wr_o     = OB_wr[PHASE2];
     assign IB_r_sel_o  = IB_sel[PHASE1];
     assign WB_r_addr_o = WB_r_addr[PHASE0];
@@ -83,7 +83,7 @@ module controller(
     assign WB_sel_o    = WB_sel[PHASE1];
     assign KB_r_addr_o = KB_r_addr[PHASE0];
     assign EX_sel_o    = EX_sel[PHASE1];
-    assign ML_sel_o    = ML_sel[PHASE1];
+    assign ML_sel_o    = ML_sel[PHASE2];
     assign update_o    = update[PHASE1];
     assign ML_clr_o    = ML_clr[PHASE1]; 
 
@@ -240,7 +240,7 @@ module controller(
                     WB_wr[PHASE0] <= 1'b1;
                     WB_sel[PHASE0] <= WB_sel[PHASE3];
                     KB_r_addr[PHASE0] <= {KB_r_addr[PHASE3][9:6], 6'b111111};
-                    EX_sel[PHASE0] <= 1'b1;
+                    EX_sel[PHASE0] <= 1'b0;
                     update[PHASE0] <= 1'b0;
                     ML_sel[PHASE0] <= 3'b0;
                     ML_clr[PHASE0] <= 1'b1;
@@ -332,7 +332,9 @@ module controller(
                     WB_sel[PHASE0] <= WB_sel[PHASE3];
                     KB_r_addr[PHASE0] <= KB_r_addr[PHASE3];
                     EX_sel[PHASE0] <= 1'b0;
-                    update[PHASE0] <= 1'b0;
+                    if (counter[PHASE3] == 6'd0) update[PHASE0] <= 1'b1; 
+                    else update[PHASE0] <= 1'b0;
+                    
                     ML_sel[PHASE0] <= counter[PHASE3][2:0];
                     ML_clr[PHASE0] <= 1'b0;
                     counter[PHASE0] <= counter[PHASE3] + 6'b1;
