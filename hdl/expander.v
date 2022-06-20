@@ -121,9 +121,10 @@ always @(posedge clk_i or posedge ~rst_ni) begin
         w_new <= 32'd0;
         data_o <= 32'd0;
     end else begin
-        // Get w from BRAM or FIFO
+        // Get data from BRAM
         if (send_i) begin
-            w1_0 <= data_i; // Consume input data to FIFO
+            w1_0 <= data_i;
+        // Get data from FIFO
         end else begin
             w1_0 <= w_new;
         end
