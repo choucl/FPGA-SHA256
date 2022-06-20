@@ -191,7 +191,64 @@ always @(posedge clk_i or negedge rst_ni) begin
 end
 
 always @(posedge clk_i or negedge rst_ni) begin
-    if (rst_ni) begin
+    if (~rst_ni) begin
+        a0 <= 32'h6a09e667;
+        b0 <= 32'hbb67ae85;
+        c0 <= 32'h3c6ef372;
+        d0 <= 32'ha54ff53a;
+        e0 <= 32'h510e527f;
+        f0 <= 32'h9b05688c;
+        g0 <= 32'h1f83d9ab;
+        h0 <= 32'h5be0cd19;
+
+        a1 <= 32'd0;
+        a2 <= 32'd0;
+        a3 <= 32'd0;
+
+        b1 <= 32'd0;
+        b2 <= 32'd0;
+        b3 <= 32'd0;
+
+        c1 <= 32'd0;
+        c2 <= 32'd0;
+        c3 <= 32'd0;
+
+        d1 <= 32'd0;
+        d2 <= 32'd0;
+        d3 <= 32'd0;
+
+        e1 <= 32'd0;
+        e2 <= 32'd0;
+        e3 <= 32'd0;
+
+        f1 <= 32'd0;
+        f2 <= 32'd0;
+        f3 <= 32'd0;
+
+        g1 <= 32'd0;
+        g2 <= 32'd0;
+        g3 <= 32'd0;
+
+        h1 <= 32'd0;
+        h2 <= 32'd0;
+        h3 <= 32'd0;
+
+        w0 <= 32'd0;
+        k0 <= 32'd0;
+
+        s0 <= 32'd0;
+        maj <= 32'd0;
+        s1 <= 32'd0;
+        ch <= 32'd0;
+        kw <= 32'd0;
+
+        s0_maj <= 32'd0;
+        s1_ch <= 32'd0;
+        hkw <= 32'd0;
+
+        t2 <= 32'd0;
+        t1 <= 32'd0;
+    end else begin
         // Main loop caculation
         // w_i and k_i
         w0 <= w_i;
