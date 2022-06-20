@@ -73,9 +73,9 @@ module controller(
     
      
     assign valid_o     = {28'b0, valid};
-    assign OB_addr_o   = OB_addr[PHASE1];
+    assign OB_addr_o   = OB_addr[PHASE2];
     assign IB_r_addr_o = IB_addr[PHASE1];
-    assign OB_wr_o     = OB_wr[PHASE1];
+    assign OB_wr_o     = OB_wr[PHASE2];
     assign IB_r_sel_o  = IB_sel[PHASE1];
     assign WB_r_addr_o = WB_r_addr[PHASE0];
     assign WB_w_addr_o = WB_w_addr[PHASE1];
@@ -363,7 +363,7 @@ module controller(
                     endcase
                     iter[PHASE0] <= iter[PHASE3];
                     IB_addr[PHASE0] <= IB_addr[PHASE3] + 10'b1;
-                    OB_wr[PHASE0] <= OB_wr[PHASE3];
+                    OB_wr[PHASE0] <= 1'b0;
                     OB_addr[PHASE0] <= OB_addr[PHASE3];
                     IB_sel[PHASE0] <= IB_sel[PHASE3];
                     WB_w_addr[PHASE0] <= WB_w_addr[PHASE3];
