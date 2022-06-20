@@ -34,7 +34,7 @@ module controller(
               VALID   = 3'd6;
 
 
-    /*  */     
+    /*       
 
     reg [2:0] state;
     reg [5:0] counter_t;
@@ -45,7 +45,7 @@ module controller(
     reg [5:0] it;
 
 
-     /**/ 
+     */ 
     
 
 
@@ -171,7 +171,7 @@ module controller(
             counter[PHASE3]   <= 6'b0;
         end
         else begin
-            /**/
+            /*
             counter_t <= counter[PHASE0];
             state <= c_state[PHASE0];
             wr_addr <= WB_r_addr[PHASE0];
@@ -179,7 +179,7 @@ module controller(
             o_addr <= OB_addr[PHASE0];
             i_addr <= IB_addr[PHASE0];
             it <= iter[PHASE0];
-            /**/
+            */
 
             phase <= phase - 2'b1;
             case (c_state[PHASE3])
