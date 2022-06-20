@@ -13,6 +13,11 @@
 `define PHASE2_WB_ADDR 10'd128
 `define PHASE3_WB_ADDR 10'd192
 
+`define PHASE0_OB_ADDR 10'd0
+`define PHASE1_OB_ADDR 10'd8
+`define PHASE2_OB_ADDR 10'd16
+`define PHASE3_OB_ADDR 10'd24
+
 
 `define ML_UPDATA_CYCLE 65
 `define PHASE_NUM 4

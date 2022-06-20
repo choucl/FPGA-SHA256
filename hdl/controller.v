@@ -6,9 +6,9 @@ module controller(
     input [`GPIO_WIDTH-1:0] start_i,
     input [`GPIO_WIDTH-1:0] IB_idx_size_i,
     output [`GPIO_WIDTH-1:0] valid_o,    
+    output [`ADDR_WIDTH-1:0] OB_addr_o,
     output [`ADDR_WIDTH-1:0] IB_r_addr_o,
-    output [`ADDR_WIDTH-1:0] IB_w_addr_o,
-    output IB_wr_o,
+    output OB_wr_o,
     output [1:0] IB_r_sel_o,
     output [1:0] IB_w_sel_o,
     output [`ADDR_WIDTH-1:0] WB_w_addr_o,
@@ -41,7 +41,8 @@ module controller(
     
     reg [5:0] iter[`PHASE_NUM-1:0];       
     reg [`ADDR_WIDTH-1:0] IB_addr[`PHASE_NUM-1:0];
-    reg [`IB_NUM-1:0] IB_wr[`PHASE_NUM-1:0];
+    reg [`ADDR_WIDTH-1:0] OB_addr[`PHASE_NUM-1:0];
+    reg [`IB_NUM-1:0] OB_wr[`PHASE_NUM-1:0];
     reg IB_sel[`PHASE_NUM-1:0];
     reg [`ADDR_WIDTH-1:0] WB_w_addr[`PHASE_NUM-1:0];
     reg [`ADDR_WIDTH-1:0] WB_r_addr[`PHASE_NUM-1:0];
@@ -56,9 +57,9 @@ module controller(
     
      
     assign valid_o     = {28'b0, valid};
-    assign IB_r_addr_o = IB_addr[PHASE0];
-    assign IB_w_addr_o = IB_addr[PHASE1];
-    assign IB_wr_o     = IB_wr[PHASE1];
+    assign OB_addr_o   = OB_addr[PHASE0];
+    assign IB_r_addr_o = IB_addr[PHASE1];
+    assign OB_wr_o     = OB_wr[PHASE1];
     assign IB_r_sel_o  = IB_sel[PHASE1];
     assign IB_w_sel_o  = IB_sel[PHASE1];
     assign WB_r_addr_o = WB_r_addr[PHASE0];
@@ -92,10 +93,15 @@ module controller(
             ML_sel[PHASE2] <= 3'b0;
             ML_sel[PHASE3] <= 3'b0;
 
+            OB_addr[PHASE0] <= `PHASE0_OB_ADDR;
+            OB_addr[PHASE1] <= `PHASE1_OB_ADDR;
+            OB_addr[PHASE2] <= `PHASE2_OB_ADDR;
+            OB_addr[PHASE3] <= `PHASE3_OB_ADDR;
+
 
            // valid[PHASE0]     <= 4'b0;
             IB_addr[PHASE0]   <= 10'b0;
-            IB_wr[PHASE0]     <= 1'b0;
+            OB_wr[PHASE0]     <= 1'b0;
             IB_sel[PHASE0]    <= 2'b0;
             WB_w_addr[PHASE0] <= `PHASE0_WB_ADDR;
             WB_r_addr[PHASE0] <= `PHASE0_WB_ADDR;
@@ -109,7 +115,7 @@ module controller(
 
             //valid[PHASE1]     <= 4'b0;
             IB_addr[PHASE1]   <= 10'b0;
-            IB_wr[PHASE1]     <= 1'b0;
+            OB_wr[PHASE1]     <= 1'b0;
             IB_sel[PHASE1]    <= 2'b0;
             WB_w_addr[PHASE1] <= `PHASE1_WB_ADDR;
             WB_r_addr[PHASE1] <= `PHASE1_WB_ADDR;
@@ -123,7 +129,7 @@ module controller(
 
             //valid[PHASE2]     <= 4'b0;
             IB_addr[PHASE2]   <= 10'b0;
-            IB_wr[PHASE2]     <= 1'b0;
+            OB_wr[PHASE2]     <= 1'b0;
             IB_sel[PHASE2]    <= 2'b0;
             WB_w_addr[PHASE2] <= `PHASE2_WB_ADDR;
             WB_r_addr[PHASE2] <= `PHASE2_WB_ADDR;
@@ -137,7 +143,7 @@ module controller(
 
             //valid[PHASE3]     <= 4'b0;
             IB_addr[PHASE3]   <= 10'b0;
-            IB_wr[PHASE3]     <= 1'b0;
+            OB_wr[PHASE3]     <= 1'b0;
             IB_sel[PHASE3]    <= 2'b0;
             WB_w_addr[PHASE3] <= `PHASE3_WB_ADDR;
             WB_r_addr[PHASE3] <= `PHASE3_WB_ADDR;
@@ -182,10 +188,11 @@ module controller(
                     endcase
                     //valid[PHASE0] <= 4'b0;
                     IB_addr[PHASE0] <= 10'b0;
-                    IB_wr[PHASE0] <= 1'b0;
+                    OB_wr[PHASE0] <= 1'b0;
+                    OB_addr[PHASE0] <= {OB_addr[PHASE3][9:3], 3'b0};
                     IB_sel[PHASE0] <= phase;
                     WB_w_addr[PHASE0] <= {WB_w_addr[PHASE3][9:6], 6'b0};
-                    WB_r_addr[PHASE0] <= {WB_w_addr[PHASE3][9:6], 6'b0};
+                    WB_r_addr[PHASE0] <= {WB_w_addr[PHASE3][9:6], 6'b0};                   
                     WB_wr[PHASE0] <= 1'b0;
                     WB_sel[PHASE0] <= 1'b0;
                     KB_r_addr[PHASE0] <= 10'b0;
@@ -200,10 +207,11 @@ module controller(
                     iter[PHASE0] <= iter[PHASE3];
                     //valid[PHASE0] <= valid[PHASE3];
                     IB_addr[PHASE0] <= IB_addr[PHASE3];
-                    IB_wr[PHASE0] <= IB_wr[PHASE3];
+                    OB_wr[PHASE0] <= OB_wr[PHASE3];
                     IB_sel[PHASE0] <= IB_sel[PHASE3];
                     WB_w_addr[PHASE0] <= {WB_w_addr[PHASE3][9:6], 6'b0};
                     WB_r_addr[PHASE0] <= {WB_w_addr[PHASE3][9:6], 6'b111111};
+                    OB_addr[PHASE0] <= OB_addr[PHASE3];
                     WB_wr[PHASE0] <= 1'b1;
                     WB_sel[PHASE0] <= WB_sel[PHASE3];
                     KB_r_addr[PHASE0] <= {KB_r_addr[PHASE3][9:6], 6'b111111};
@@ -218,7 +226,8 @@ module controller(
                     iter[PHASE0] <= iter[PHASE3];
                     //valid[PHASE0] <= valid[PHASE3];
                     IB_addr[PHASE0] <= IB_addr[PHASE3] + 10'b1;
-                    IB_wr[PHASE0] <= IB_wr[PHASE3];
+                    OB_wr[PHASE0] <= OB_wr[PHASE3];
+                    OB_addr[PHASE0] <= OB_addr[PHASE3];
                     IB_sel[PHASE0] <= IB_sel[PHASE3];
                     WB_w_addr[PHASE0] <= {WB_w_addr[PHASE3][9:6], WB_w_addr[PHASE3][5:0] + 6'b1};
                     WB_r_addr[PHASE0] <= {WB_r_addr[PHASE3][9:6], WB_w_addr[PHASE3][5:0] + 6'b1};
@@ -249,10 +258,11 @@ module controller(
                     iter[PHASE0] <= iter[PHASE3];
                     //valid[PHASE0] <= valid[PHASE3];
                     
-                    IB_wr[PHASE0] <= IB_wr[PHASE3];
+                    OB_wr[PHASE0] <= OB_wr[PHASE3];
+                    OB_addr[PHASE0] <= OB_addr[PHASE3];
                     IB_sel[PHASE0] <= IB_sel[PHASE3];
                     WB_w_addr[PHASE0] <= {WB_w_addr[PHASE3][9:6], WB_w_addr[PHASE3][5:0] + 6'b1};
-                    WB_r_addr[PHASE0] <= {WB_r_addr[PHASE3][9:6], WB_w_addr[PHASE3][5:0] + 6'b1};
+                    WB_r_addr[PHASE0] <= {WB_r_addr[PHASE3][9:6], WB_w_addr[PHASE3][5:0] + 6'b1};                   
                     WB_wr[PHASE0] <= 1'b1;
                     KB_r_addr[PHASE0] <= {KB_r_addr[PHASE3][9:6], KB_r_addr[PHASE3][5:0] + 6'b1};
                     
@@ -266,7 +276,8 @@ module controller(
                     iter[PHASE0] <= iter[PHASE3] - 6'b1;
                     //valid[PHASE0] <= 1'b0;
                     IB_addr[PHASE0] <= IB_addr[PHASE3] + 10'b1;
-                    IB_wr[PHASE0] <= IB_wr[PHASE3];
+                    OB_wr[PHASE0] <= OB_wr[PHASE3];
+                    OB_addr[PHASE0] <= OB_addr[PHASE3];
                     IB_sel[PHASE0] <= IB_sel[PHASE3];
                     WB_w_addr[PHASE0] <= {WB_w_addr[PHASE3][9:6], WB_w_addr[PHASE3][5:0] + 6'b1};
                     WB_r_addr[PHASE0] <= {WB_r_addr[PHASE3][9:6], WB_w_addr[PHASE3][5:0] + 6'b1};
@@ -283,8 +294,9 @@ module controller(
                     else c_state[PHASE0] <= ML; 
                     iter[PHASE0] <= iter[PHASE3];
                     //valid[PHASE0] <= valid[PHASE3];
-                    IB_addr[PHASE0] <= {7'b0, counter[PHASE3][2:0]};
-                    IB_wr[PHASE0] <= 1'b1;
+                    IB_addr[PHASE0] <= IB_addr[PHASE3];
+                    OB_wr[PHASE0] <= 1'b1;
+                    OB_addr[PHASE0] <= {OB_addr[PHASE3][9:3], counter[PHASE3][2:0]};
                     IB_sel[PHASE0] <= IB_sel[PHASE3];
                     WB_w_addr[PHASE0] <= WB_w_addr[PHASE3];
                     WB_r_addr[PHASE0] <= WB_r_addr[PHASE3];
@@ -323,7 +335,8 @@ module controller(
                     endcase
                     iter[PHASE0] <= iter[PHASE3];
                     IB_addr[PHASE0] <= IB_addr[PHASE3] + 10'b1;
-                    IB_wr[PHASE0] <= IB_wr[PHASE3];
+                    OB_wr[PHASE0] <= OB_wr[PHASE3];
+                    OB_addr[PHASE0] <= OB_addr[PHASE3];
                     IB_sel[PHASE0] <= IB_sel[PHASE3];
                     WB_w_addr[PHASE0] <= WB_w_addr[PHASE3];
                     WB_r_addr[PHASE0] <= WB_r_addr[PHASE3];
@@ -342,7 +355,8 @@ module controller(
             iter[PHASE1]      <= iter[PHASE0];
             //valid[PHASE1]     <= valid[PHASE0];
             IB_addr[PHASE1]   <= IB_addr[PHASE0];
-            IB_wr[PHASE1]     <= IB_wr[PHASE0];
+            OB_wr[PHASE1]     <= OB_wr[PHASE0];
+            OB_addr[PHASE1]   <= OB_addr[PHASE0];
             IB_sel[PHASE1]    <= IB_sel[PHASE0];
             WB_w_addr[PHASE1] <= WB_w_addr[PHASE0];
             WB_r_addr[PHASE1] <= WB_r_addr[PHASE0];
@@ -359,7 +373,8 @@ module controller(
             iter[PHASE2]      <= iter[PHASE1];
             //valid[PHASE2]     <= valid[PHASE1];
             IB_addr[PHASE2]   <= IB_addr[PHASE1];
-            IB_wr[PHASE2]     <= IB_wr[PHASE1];
+            OB_wr[PHASE2]     <= OB_wr[PHASE1];
+            OB_addr[PHASE2]   <= OB_addr[PHASE1];
             IB_sel[PHASE2]    <= IB_sel[PHASE1];
             WB_w_addr[PHASE2] <= WB_w_addr[PHASE1];
             WB_r_addr[PHASE2] <= WB_r_addr[PHASE1];
@@ -376,7 +391,8 @@ module controller(
             iter[PHASE3]      <= iter[PHASE2];
             //valid[PHASE3]     <= valid[PHASE2];
             IB_addr[PHASE3]   <= IB_addr[PHASE2];
-            IB_wr[PHASE3]     <= IB_wr[PHASE2];
+            OB_wr[PHASE3]     <= OB_wr[PHASE2];
+            OB_addr[PHASE3]   <= OB_addr[PHASE2];
             IB_sel[PHASE3]    <= IB_sel[PHASE2];
             WB_w_addr[PHASE3] <= WB_w_addr[PHASE2];
             WB_r_addr[PHASE3] <= WB_r_addr[PHASE2];
