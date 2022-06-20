@@ -34,13 +34,18 @@ module controller(
               VALID   = 3'd6;
 
 
-    /*          
+    /*       
 
     reg [2:0] state;
     reg [5:0] counter_t;
+    reg [9:0] o_addr;
+    reg [9:0] wr_addr;
+    reg [9:0] i_addr;
+    reg [9:0] ww_addr;
+    reg [5:0] it;
 
 
-       */ 
+     */ 
     
 
 
@@ -53,8 +58,8 @@ module controller(
     reg [5:0] iter[`PHASE_NUM-1:0];       
     reg [`ADDR_WIDTH-1:0] IB_addr[`PHASE_NUM-1:0];
     reg [`ADDR_WIDTH-1:0] OB_addr[`PHASE_NUM-1:0];
-    reg [`IB_NUM-1:0] OB_wr[`PHASE_NUM-1:0];
-    reg IB_sel[`PHASE_NUM-1:0];
+    reg OB_wr[`PHASE_NUM-1:0];
+    reg [1:0] IB_sel[`PHASE_NUM-1:0];
     reg [`ADDR_WIDTH-1:0] WB_w_addr[`PHASE_NUM-1:0];
     reg [`ADDR_WIDTH-1:0] WB_r_addr[`PHASE_NUM-1:0];
     reg WB_wr[`PHASE_NUM-1:0];
@@ -169,9 +174,14 @@ module controller(
             /*
             counter_t <= counter[PHASE0];
             state <= c_state[PHASE0];
+            wr_addr <= WB_r_addr[PHASE0];
+            ww_addr <= WB_w_addr[PHASE0];
+            o_addr <= OB_addr[PHASE0];
+            i_addr <= IB_addr[PHASE0];
+            it <= iter[PHASE0];
             */
 
-            phase <= phase + 2'b1;
+            phase <= phase - 2'b1;
             case (c_state[PHASE3])
                 IDLE: begin
                     case (phase) 
@@ -206,7 +216,7 @@ module controller(
                     OB_addr[PHASE0] <= {OB_addr[PHASE3][9:3], 3'b0};
                     IB_sel[PHASE0] <= phase;
                     WB_w_addr[PHASE0] <= {WB_w_addr[PHASE3][9:6], 6'b0};
-                    WB_r_addr[PHASE0] <= {WB_w_addr[PHASE3][9:6], 6'b0};                   
+                    WB_r_addr[PHASE0] <= {WB_r_addr[PHASE3][9:6], 6'b0};                   
                     WB_wr[PHASE0] <= 1'b0;
                     WB_sel[PHASE0] <= 1'b0;
                     KB_r_addr[PHASE0] <= 10'b0;
@@ -224,7 +234,7 @@ module controller(
                     OB_wr[PHASE0] <= OB_wr[PHASE3];
                     IB_sel[PHASE0] <= IB_sel[PHASE3];
                     WB_w_addr[PHASE0] <= {WB_w_addr[PHASE3][9:6], 6'b0};
-                    WB_r_addr[PHASE0] <= {WB_w_addr[PHASE3][9:6], 6'b111111};
+                    WB_r_addr[PHASE0] <= {WB_r_addr[PHASE3][9:6], 6'b111111};
                     OB_addr[PHASE0] <= OB_addr[PHASE3];
                     WB_wr[PHASE0] <= 1'b1;
                     WB_sel[PHASE0] <= WB_sel[PHASE3];
@@ -244,7 +254,7 @@ module controller(
                     OB_addr[PHASE0] <= OB_addr[PHASE3];
                     IB_sel[PHASE0] <= IB_sel[PHASE3];
                     WB_w_addr[PHASE0] <= {WB_w_addr[PHASE3][9:6], WB_w_addr[PHASE3][5:0] + 6'b1};
-                    WB_r_addr[PHASE0] <= {WB_r_addr[PHASE3][9:6], WB_w_addr[PHASE3][5:0] + 6'b1};
+                    WB_r_addr[PHASE0] <= {WB_r_addr[PHASE3][9:6], WB_r_addr[PHASE3][5:0] + 6'b1};
                     WB_wr[PHASE0] <= 1'b1;
                     WB_sel[PHASE0] <= 1'b0;
                     KB_r_addr[PHASE0] <= {KB_r_addr[PHASE3][9:6], KB_r_addr[PHASE3][5:0] + 6'b1};
@@ -276,7 +286,7 @@ module controller(
                     OB_addr[PHASE0] <= OB_addr[PHASE3];
                     IB_sel[PHASE0] <= IB_sel[PHASE3];
                     WB_w_addr[PHASE0] <= {WB_w_addr[PHASE3][9:6], WB_w_addr[PHASE3][5:0] + 6'b1};
-                    WB_r_addr[PHASE0] <= {WB_r_addr[PHASE3][9:6], WB_w_addr[PHASE3][5:0] + 6'b1};                   
+                    WB_r_addr[PHASE0] <= {WB_r_addr[PHASE3][9:6], WB_r_addr[PHASE3][5:0] + 6'b1};                   
                     WB_wr[PHASE0] <= 1'b1;
                     KB_r_addr[PHASE0] <= {KB_r_addr[PHASE3][9:6], KB_r_addr[PHASE3][5:0] + 6'b1};
                     
@@ -294,7 +304,7 @@ module controller(
                     OB_addr[PHASE0] <= OB_addr[PHASE3];
                     IB_sel[PHASE0] <= IB_sel[PHASE3];
                     WB_w_addr[PHASE0] <= {WB_w_addr[PHASE3][9:6], WB_w_addr[PHASE3][5:0] + 6'b1};
-                    WB_r_addr[PHASE0] <= {WB_r_addr[PHASE3][9:6], WB_w_addr[PHASE3][5:0] + 6'b1};
+                    WB_r_addr[PHASE0] <= {WB_r_addr[PHASE3][9:6], WB_r_addr[PHASE3][5:0] + 6'b1};
                     WB_wr[PHASE0] <= 1'b1;
                     WB_sel[PHASE0] <= 1'b0;
                     KB_r_addr[PHASE0] <= {KB_r_addr[PHASE3][9:6], KB_r_addr[PHASE3][5:0] + 6'b1};
