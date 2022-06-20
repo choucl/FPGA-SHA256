@@ -49,7 +49,7 @@ assign sum_w = s0_w16 + s1_w7;
 // Stage 2
 reg [31:0] w_new;
 
-always @(posedge clk_i or posedge ~rst_ni) begin
+always @(posedge clk_i or negedge rst_ni) begin
     if (~rst_ni) begin
         w1_0 <= 32'd0;
         w1_1 <= 32'd0;
