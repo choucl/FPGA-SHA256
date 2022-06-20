@@ -200,8 +200,8 @@ RAMB36E1 #(
     .RAM_EXTENSION_B("NONE"),
     // READ_WIDTH_A/B, WRITE_WIDTH_A/B: Read/write width per port
     .READ_WIDTH_A(36), // 0-72
-    .READ_WIDTH_B(0), // 0-36
-    .WRITE_WIDTH_A(0), // 0-36
+    .READ_WIDTH_B(36), // 0-36
+    .WRITE_WIDTH_A(36), // 0-36
     .WRITE_WIDTH_B(36), // 0-72
     // RSTREG_PRIORITY_A, RSTREG_PRIORITY_B: Reset or enable priority ("RSTREG" or "REGCE")
     .RSTREG_PRIORITY_A("RSTREG"),
