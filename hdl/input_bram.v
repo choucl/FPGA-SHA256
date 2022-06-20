@@ -1,11 +1,14 @@
 /*
  * Dual port mode: TDP
+ *
  * Port A: read by preprocess
  * Read width A: 36
  * Write width A: 0
+ *
  * Port B: write by AXI
  * Write width B: 36
  * Read width B: 0
+ *
  * Write mode: write first
  * Size: 4Kb(2^12)
  */
@@ -15,9 +18,8 @@ module input_bram(
     input         clk_bi,
     input         rst_ani, // ~rst_ani is connected port/reg reset
     input         rst_bi,  // rst_bi is connected port/reg reset
-    input         en_ai,
-    input         en_bi,
-    input  [3:0]  we_bi,
+    input         en_bi,   // Enable signal from axi
+    input  [3:0]  we_bi,   // 4-bit byte write enable from axi
     input  [31:0] din_bi;  // Input data
     input  [9:0]  addr_ai, // Read addr
     input  [9:0]  addr_bi, // Write addr
@@ -233,7 +235,7 @@ RAMB36E1 #(
 	// when RAM_MODE="SDP")
     .ADDRARDADDR({1'b1, addr_ai, 5'd0}), // 16-bit input: A port address/Read address
     .CLKARDCLK(clk_ai), // 1-bit input: A port clock/Read clock
-    .ENARDEN(en_ai), // 1-bit input: A port enable/Read enable
+    .ENARDEN(1), // 1-bit input: A port enable/Read enable
     .REGCEAREGCE(), // 1-bit input: A port register enable/Register enable
     .RSTRAMARSTRAM(~rst_ani), // 1-bit input: A port set/reset
     .RSTREGARSTREG(~rst_ani), // 1-bit input: A port register set/reset

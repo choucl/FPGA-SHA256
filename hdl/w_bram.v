@@ -1,11 +1,14 @@
 /*
  * Dual port mode: TDP
+ *
  * Port A: read by main loop, write by controller
  * Read width A: 36
  * Write width A: 36
+ *
  * Port B: write by preprocess
  * Read width: 0
  * Write width: 36
+ *
  * Write mode: write first
  * Size: 4Kb(2^12)
  */
@@ -15,10 +18,8 @@ module w_bram(
     input         clk_bi,
     input         rst_ani, // ~rst_ani is connected port/reg reset
     input         rst_bni, // ~rst_bni is connected port/reg reset
-    input         en_ai,
-    input         en_bi,
-    input  [3:0]  we_ai,   // 4-bit byte-wide write enable
-    input  [3:0]  we_bi,   // 4-bit byte-wide write enable
+    input         we_ai,   // Byte-wide write enable from controller
+    input         we_bi,   // Byte-wide write enable from controller
     input  [31:0] din_ai,
     input  [31:0] din_bi,
     input  [9:0]  addr_ai,
@@ -235,11 +236,11 @@ RAMB36E1 #(
 	// when RAM_MODE="SDP")
     .ADDRARDADDR({1'b1, addr_ai, 5'd0}), // 16-bit input: A port address/Read address
     .CLKARDCLK(clk_ai), // 1-bit input: A port clock/Read clock
-    .ENARDEN(en_ai), // 1-bit input: A port enable/Read enable
+    .ENARDEN(1), // 1-bit input: A port enable/Read enable
     .REGCEAREGCE(), // 1-bit input: A port register enable/Register enable
     .RSTRAMARSTRAM(~rst_ani), // 1-bit input: A port set/reset
     .RSTREGARSTREG(~rst_ani), // 1-bit input: A port register set/reset
-    .WEA(we_ai), // 4-bit input: A port write enable
+    .WEA({we_ai, we_ai, we_ai, we_ai}), // 4-bit input: A port write enable
     // Port A Data: 32-bit (each) input: Port A data
     .DIADI(din_ai), // 32-bit input: A port data/LSB data
     .DIPADIP(), // 4-bit input: A port parity/LSB parity
@@ -247,11 +248,11 @@ RAMB36E1 #(
 	// when RAM_MODE="SDP")
     .ADDRBWRADDR({1'b1, addr_bi, 5'd0}), // 16-bit input: B port address/Write address
     .CLKBWRCLK(clk_bi), // 1-bit input: B port clock/Write clock
-    .ENBWREN(en_bi), // 1-bit input: B port enable/Write enable
+    .ENBWREN(1), // 1-bit input: B port enable/Write enable
     .REGCEB(), // 1-bit input: B port register enable
     .RSTRAMB(~rst_bni), // 1-bit input: B port set/reset
     .RSTREGB(~rst_bni), // 1-bit input: B port register set/reset
-    .WEBWE({4'd0, we_bi}), // 8-bit input: B port write enable/Write enable
+    .WEBWE({4'd0, we_bi, we_bi, we_bi, we_bi}), // 8-bit input: B port write enable/Write enable
     // Port B Data: 32-bit (each) input: Port B data
     .DIBDI(din_bi), // 32-bit input: B port data/MSB data
     .DIPBDIP() // 4-bit input: B port parity/MSB parity

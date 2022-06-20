@@ -1,9 +1,12 @@
 /*
  * Dual port mode: TDP
+ *
  * Port A: read by main loop
  * Read width A: 36
  * Write width A: 0
+ *
  * Port B: unused
+ *
  * Write mode: write first
  * Size: 4Kb(2^12)
  */
