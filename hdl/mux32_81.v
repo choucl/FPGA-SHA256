@@ -17,10 +17,10 @@ module mux32_81(
             1: dout_o = din1_i;
             2: dout_o = din2_i;
             3: dout_o = din3_i;
-            4: dout_o = din0_i;
-            5: dout_o = din1_i;
-            6: dout_o = din2_i;
-            7: dout_o = din3_i;
+            4: dout_o = din4_i;
+            5: dout_o = din5_i;
+            6: dout_o = din6_i;
+            7: dout_o = din7_i;
         endcase
     end
 
