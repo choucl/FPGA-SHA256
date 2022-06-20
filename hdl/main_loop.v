@@ -5,7 +5,7 @@
 module main_loop(
     input clk_i,
     input rst_ni,
-    input clr_ni,
+    input clr_i,
     input update_i,
     input [31:0] w_i,
     input [31:0] k_i,
@@ -126,7 +126,7 @@ always @(posedge clk_i or posedge ~rst_ni) begin
         H36 <= 32'h1f83d9ab;
         H37 <= 32'h5be0cd19;
     end else begin
-        if (~clr_ni) begin
+        if (clr_i) begin
             // Clear 1st hash set
             H00 <= 32'h6a09e667;
             H01 <= 32'hbb67ae85;
@@ -210,7 +210,7 @@ always @(posedge clk_i) begin
         t2 <= s0_maj;
         t1 <= t1_w;  // t1 <= s1_ch + hkw;
         // Stage 3 begin
-        if (~clr_ni) begin
+        if (clr_i) begin
             a0 <= 32'h6a09e667;
             b0 <= 32'hbb67ae85;
             c0 <= 32'h3c6ef372;
