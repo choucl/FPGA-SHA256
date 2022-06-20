@@ -17,10 +17,10 @@ module input_bram(
     input         rst_bi,  // rst_bi is connected port/reg reset
     input         en_ai,
     input         en_bi,
-    input         we_bi,
+    input  [3:0]  we_bi,
     input  [31:0] din_bi;  // Input data
-    input  [11:0] addr_ai, // Read addr
-    input  [11:0] addr_bi, // Write addr
+    input  [9:0]  addr_ai, // Read addr
+    input  [9:0]  addr_bi, // Write addr
     output [31:0] dout_ao  // Output data
 );
 
@@ -231,7 +231,7 @@ RAMB36E1 #(
     .INJECTSBITERR(),// 1-bit input: Inject a single bit error
 	// Port A Address/Control Signals: 16-bit (each) input: Port A address and control signals (read port
 	// when RAM_MODE="SDP")
-    .ADDRARDADDR({1'b1, addr_ai, 3'd0}), // 16-bit input: A port address/Read address
+    .ADDRARDADDR({1'b1, addr_ai, 5'd0}), // 16-bit input: A port address/Read address
     .CLKARDCLK(clk_ai), // 1-bit input: A port clock/Read clock
     .ENARDEN(en_ai), // 1-bit input: A port enable/Read enable
     .REGCEAREGCE(), // 1-bit input: A port register enable/Register enable
@@ -243,13 +243,13 @@ RAMB36E1 #(
     .DIPADIP(), // 4-bit input: A port parity/LSB parity
 	// Port B Address/Control Signals: 16-bit (each) input: Port B address and control signals (write port
 	// when RAM_MODE="SDP")
-    .ADDRBWRADDR({1'b1, addr_bi, 3'd0}), // 16-bit input: B port address/Write address
+    .ADDRBWRADDR({1'd1, addr_bi, 5'd0}), // 16-bit input: B port address/Write address
     .CLKBWRCLK(clk_bi), // 1-bit input: B port clock/Write clock
     .ENBWREN(en_bi), // 1-bit input: B port enable/Write enable
     .REGCEB(), // 1-bit input: B port register enable
     .RSTRAMB(rst_bi), // 1-bit input: B port set/reset
     .RSTREGB(rst_bi), // 1-bit input: B port register set/reset
-    .WEBWE({4'b0000, we_bi, we_bi, we_bi, we_bi}), // 8-bit input: B port write enable/Write enable
+    .WEBWE({4'd0, we_bi}), // 8-bit input: B port write enable/Write enable
     // Port B Data: 32-bit (each) input: Port B data
     .DIBDI(din_bi), // 32-bit input: B port data/MSB data
     .DIPBDIP() // 4-bit input: B port parity/MSB parity
