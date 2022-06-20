@@ -3,11 +3,10 @@
  * For w0 is input at 0'th cycle, w16 will be produced at 64'th cycle,
  * and w63 will come out at 252'th cycle 
  */
-module expand(
+module expander(
     input clk_i,
     input rst_ni,
     input send_i,
-    //input clr_ni,
     input [31:0] data_i,     // Input w
     output reg [31:0] data_o // Output w
 );
