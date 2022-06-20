@@ -81,16 +81,16 @@ assign new_e = t2 + d3;
 wire [31:0] H0_new, H1_new, H2_new, H3_new;
 wire [31:0] H4_new, H5_new, H6_new, H7_new;
 
-assign H0_new = H30 + t1 + t2; // H0 = a + H0
-assign H1_new = H31 + a3;      // H1 = b + H1
-assign H2_new = H32 + b3;      // H2 = c + H2
-assign H3_new = H33 + c3;      // H3 = d + H3
-assign H4_new = H34 + t2 + d3; // H4 = e + H4
-assign H5_new = H35 + e3;      // H5 = f + H5
-assign H6_new = H36 + f3;      // H6 = g + H6
-assign H7_new = H37 + g3;      // H7 = h + H7
+assign H0_new = H30 + new_a; // H0 = a + H0
+assign H1_new = H31 + a3;    // H1 = b + H1
+assign H2_new = H32 + b3;    // H2 = c + H2
+assign H3_new = H33 + c3;    // H3 = d + H3
+assign H4_new = H34 + new_e; // H4 = e + H4
+assign H5_new = H35 + e3;    // H5 = f + H5
+assign H6_new = H36 + f3;    // H6 = g + H6
+assign H7_new = H37 + g3;    // H7 = h + H7
 
-always @(posedge clk_i or posedge ~rst_ni) begin
+always @(posedge clk_i or negedge rst_ni) begin
     if (~rst_ni) begin
         // Reset hash values
         H00 <= 32'h6a09e667;
@@ -190,7 +190,7 @@ always @(posedge clk_i or posedge ~rst_ni) begin
     end   
 end
 
-always @(posedge clk_i) begin
+always @(posedge clk_i or negedge rst_ni) begin
     if (rst_ni) begin
         // Main loop caculation
         // w_i and k_i
