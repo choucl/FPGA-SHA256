@@ -19,7 +19,7 @@ module w_bram(
     input         en_bi,
     input  [3:0]  we_ai,   // 4-bit byte-wide write enable
     input  [3:0]  we_bi,   // 4-bit byte-wide write enable
-    input  [31:0] din_ai
+    input  [31:0] din_ai,
     input  [31:0] din_bi,
     input  [9:0]  addr_ai,
     input  [9:0]  addr_bi,
