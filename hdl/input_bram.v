@@ -20,7 +20,7 @@ module input_bram(
     input         rst_bi,  // rst_bi is connected port/reg reset
     input         en_bi,   // Enable signal from axi
     input  [3:0]  we_bi,   // 4-bit byte write enable from axi
-    input  [31:0] din_bi;  // Input data
+    input  [31:0] din_bi,  // Input data
     input  [9:0]  addr_ai, // Read addr
     input  [9:0]  addr_bi, // Write addr
     output [31:0] dout_ao  // Output data
