@@ -225,7 +225,7 @@ RAMB36E1 #(
     .INJECTSBITERR(),// 1-bit input: Inject a single bit error
 	// Port A Address/Control Signals: 16-bit (each) input: Port A address and control signals (read port
 	// when RAM_MODE="SDP")
-    .ADDRARDADDR({1'b1 addr_ai, 5'd0}), // 16-bit input: A port address/Read address
+    .ADDRARDADDR({1'b1, addr_ai, 5'd0}), // 16-bit input: A port address/Read address
     .CLKARDCLK(clk_ai), // 1-bit input: A port clock/Read clock
     .ENARDEN(1), // 1-bit input: A port enable/Read enable
     .REGCEAREGCE(), // 1-bit input: A port register enable/Register enable
