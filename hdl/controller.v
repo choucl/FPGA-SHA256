@@ -34,7 +34,7 @@ module controller(
               VALID   = 3'd6;
 
 
-    /*       
+    /*  */     
 
     reg [2:0] state;
     reg [5:0] counter_t;
@@ -45,7 +45,7 @@ module controller(
     reg [5:0] it;
 
 
-     */ 
+     /**/ 
     
 
 
@@ -171,7 +171,7 @@ module controller(
             counter[PHASE3]   <= 6'b0;
         end
         else begin
-            /*
+            /**/
             counter_t <= counter[PHASE0];
             state <= c_state[PHASE0];
             wr_addr <= WB_r_addr[PHASE0];
@@ -179,7 +179,7 @@ module controller(
             o_addr <= OB_addr[PHASE0];
             i_addr <= IB_addr[PHASE0];
             it <= iter[PHASE0];
-            */
+            /**/
 
             phase <= phase - 2'b1;
             case (c_state[PHASE3])
@@ -222,6 +222,7 @@ module controller(
                     KB_r_addr[PHASE0] <= 10'b0;
                     EX_sel[PHASE0] <= 1'b0;
                     update[PHASE0] <= 1'b0;
+                    ML_sel[PHASE0] <= 3'b0;
                     ML_clr[PHASE0] <= 1'b0;
                     counter[PHASE0] <= 6'b0;
                 end
@@ -241,6 +242,7 @@ module controller(
                     KB_r_addr[PHASE0] <= {KB_r_addr[PHASE3][9:6], 6'b111111};
                     EX_sel[PHASE0] <= 1'b1;
                     update[PHASE0] <= 1'b0;
+                    ML_sel[PHASE0] <= 3'b0;
                     ML_clr[PHASE0] <= 1'b1;
                     counter[PHASE0] <= counter[PHASE3];
                 end
@@ -261,6 +263,7 @@ module controller(
                     EX_sel[PHASE0] <= 1'b0;
                     update[PHASE0] <= 1'b0;
                     ML_clr[PHASE0] <= 1'b1;
+                    ML_sel[PHASE0] <= 3'b0;
                     counter[PHASE0] <= counter[PHASE3] + 6'b1;;
                 end
                 ML: begin
@@ -289,7 +292,7 @@ module controller(
                     WB_r_addr[PHASE0] <= {WB_r_addr[PHASE3][9:6], WB_r_addr[PHASE3][5:0] + 6'b1};                   
                     WB_wr[PHASE0] <= 1'b1;
                     KB_r_addr[PHASE0] <= {KB_r_addr[PHASE3][9:6], KB_r_addr[PHASE3][5:0] + 6'b1};
-                    
+                    ML_sel[PHASE0] <= 3'b0;
                     update[PHASE0] <= 1'b0;
                     ML_clr[PHASE0] <= 1'b0;
                     counter[PHASE0] <= counter[PHASE3] + 6'b1;
@@ -310,6 +313,7 @@ module controller(
                     KB_r_addr[PHASE0] <= {KB_r_addr[PHASE3][9:6], KB_r_addr[PHASE3][5:0] + 6'b1};
                     EX_sel[PHASE0] <= 1'b0;
                     update[PHASE0] <= 1'b1;
+                    ML_sel[PHASE0] <= 3'b0;
                     ML_clr[PHASE0] <= 1'b0;
                     counter[PHASE0] <= counter[PHASE3] + 6'b1;
                 end
@@ -334,7 +338,7 @@ module controller(
                     counter[PHASE0] <= counter[PHASE3] + 6'b1;
                 end
                 VALID: begin
-                    c_state[PHASE0] <= ML;
+                    //c_state[PHASE0] <= ML;
                     case (phase) 
                         PHASE0: begin
                             valid <= {valid[3:1], 1'b1};
