@@ -73,7 +73,7 @@ module controller(
     
      
     assign valid_o     = {28'b0, valid};
-    assign OB_addr_o   = OB_addr[PHASE0];
+    assign OB_addr_o   = OB_addr[PHASE1];
     assign IB_r_addr_o = IB_addr[PHASE1];
     assign OB_wr_o     = OB_wr[PHASE1];
     assign IB_r_sel_o  = IB_sel[PHASE1];
