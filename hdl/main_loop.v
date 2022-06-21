@@ -61,7 +61,7 @@ assign s0_w = a_rr_2 ^ a_rr_13 ^ a_rr_22;
 assign s1_w = e_rr_6 ^ e_rr_11 ^ e_rr_25;
 assign maj_w = a_and_b ^ b_and_c ^ a_and_c;
 assign ch_w = e_and_f ^ ne_and_g;
-assign kw_w = w0 + k0;
+assign kw_w = w_i + k_i;
 // Stage 1
 reg [31:0] s0_maj, s1_ch, hkw;
 wire [31:0] s0_maj_w, s1_ch_w, hkw_w;
@@ -72,7 +72,9 @@ assign hkw_w = h1 + kw;
 // Stage 2
 reg [31:0] t1, t2;
 wire [31:0] t1_w;
+wire [31:0] t2_w;
 assign t1_w = s1_ch + hkw;
+assign t2_w = s0_maj;
 // Stage 3
 wire [31:0] new_a, new_e;
 assign new_a = t1 + t2;
@@ -192,14 +194,14 @@ end
 
 always @(posedge clk_i or negedge rst_ni) begin
     if (~rst_ni) begin
-        a0 <= 32'h6a09e667;
-        b0 <= 32'hbb67ae85;
-        c0 <= 32'h3c6ef372;
-        d0 <= 32'ha54ff53a;
-        e0 <= 32'h510e527f;
-        f0 <= 32'h9b05688c;
-        g0 <= 32'h1f83d9ab;
-        h0 <= 32'h5be0cd19;
+        a0 <= 32'd0;
+        b0 <= 32'd0;
+        c0 <= 32'd0;
+        d0 <= 32'd0;
+        e0 <= 32'd0;
+        f0 <= 32'd0;
+        g0 <= 32'd0;
+        h0 <= 32'd0;
 
         a1 <= 32'd0;
         a2 <= 32'd0;
@@ -264,7 +266,7 @@ always @(posedge clk_i or negedge rst_ni) begin
         s1_ch <= s1_ch_w;   // s1_ch <= s1 + ch;
         hkw <= hkw_w;// hkw <= h1 + kw;
         // Stage 2
-        t2 <= s0_maj;
+        t2 <= t2_w;
         t1 <= t1_w;  // t1 <= s1_ch + hkw;
         // Stage 3 begin
         if (clr_i) begin
