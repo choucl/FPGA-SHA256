@@ -328,7 +328,7 @@ module controller(
                     IB_sel[PHASE0] <= IB_sel[PHASE3];
                     WB_w_addr[PHASE0] <= WB_w_addr[PHASE3];
                     WB_r_addr[PHASE0] <= WB_r_addr[PHASE3];
-                    WB_wr[PHASE0] <= 1'b1;
+                    WB_wr[PHASE0] <= 1'b0;
                     WB_sel[PHASE0] <= WB_sel[PHASE3];
                     KB_r_addr[PHASE0] <= KB_r_addr[PHASE3];
                     EX_sel[PHASE0] <= 1'b0;
@@ -364,19 +364,19 @@ module controller(
                         end
                     endcase
                     iter[PHASE0] <= iter[PHASE3];
-                    IB_addr[PHASE0] <= IB_addr[PHASE3] + 10'b1;
+                    IB_addr[PHASE0] <= IB_addr[PHASE3];
                     OB_wr[PHASE0] <= 1'b0;
                     OB_addr[PHASE0] <= OB_addr[PHASE3];
                     IB_sel[PHASE0] <= IB_sel[PHASE3];
                     WB_w_addr[PHASE0] <= WB_w_addr[PHASE3];
                     WB_r_addr[PHASE0] <= WB_r_addr[PHASE3];
-                    WB_wr[PHASE0] <= 1'b1;
+                    WB_wr[PHASE0] <= 1'b0;
                     WB_sel[PHASE0] <= WB_sel[PHASE3];
                     KB_r_addr[PHASE0] <= KB_r_addr[PHASE3];
                     EX_sel[PHASE0] <= EX_sel[PHASE0];
                     update[PHASE0] <= 1'b0;
                     ML_clr[PHASE0] <= 1'b0;
-                    counter[PHASE0] <= counter[PHASE3] + 6'b1;
+                    counter[PHASE0] <= counter[PHASE3];
                 end
 
             endcase
