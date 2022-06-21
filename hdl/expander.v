@@ -121,12 +121,12 @@ always @(posedge clk_i or negedge rst_ni) begin
         w_new <= 32'd0;
         data_o <= 32'd0;
     end else begin
-        // Get data from BRAM
-        if (send_i) begin
-            w1_0 <= data_i;
         // Get data from FIFO
-        end else begin
+        if (send_i) begin
             w1_0 <= w_new;
+        // Get data from BRAM
+        end else begin
+            w1_0 <= data_i;
         end
         // Calculations
         // Stage 0
