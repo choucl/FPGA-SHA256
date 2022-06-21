@@ -51,7 +51,7 @@ assign a_and_b = a0 & b0;
 assign a_and_c = a0 & c0;
 assign b_and_c = b0 & c0;
 assign e_and_f = e0 & f0;
-assign ne_and_g = (~e0) & f0;
+assign ne_and_g = (~e0) & g0;
 
 // Stage 0
 reg [31:0] s0, s1, maj, ch, kw;
@@ -76,7 +76,7 @@ assign t1_w = s1_ch + hkw;
 // Stage 3
 wire [31:0] new_a, new_e;
 assign new_a = t1 + t2;
-assign new_e = t2 + d3;
+assign new_e = t1 + d3;
 
 wire [31:0] H0_new, H1_new, H2_new, H3_new;
 wire [31:0] H4_new, H5_new, H6_new, H7_new;
