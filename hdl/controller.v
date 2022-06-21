@@ -340,7 +340,7 @@ module controller(
                     counter[PHASE0] <= counter[PHASE3] + 6'b1;
                 end
                 VALID: begin
-                    //c_state[PHASE0] <= ML;
+                    //c_state[PHASE0] <= ML;;
                     case (phase) 
                         PHASE0: begin
                             valid <= {valid[3:1], 1'b1};
