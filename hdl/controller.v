@@ -77,11 +77,11 @@ module controller(
     assign IB_r_addr_o = IB_addr[PHASE0];
     assign OB_wr_o     = OB_wr[PHASE2];
     assign IB_r_sel_o  = IB_sel[PHASE1];
-    assign WB_r_addr_o = WB_r_addr[PHASE0];
+    assign WB_r_addr_o = WB_r_addr[PHASE1];
     assign WB_w_addr_o = WB_w_addr[PHASE1];
     assign WB_wr_o     = WB_wr[PHASE1];
     assign WB_sel_o    = WB_sel[PHASE1];
-    assign KB_r_addr_o = KB_r_addr[PHASE0];
+    assign KB_r_addr_o = KB_r_addr[PHASE1];
     assign EX_sel_o    = EX_sel[PHASE1];
     assign ML_sel_o    = ML_sel[PHASE2];
     assign update_o    = update[PHASE1];
